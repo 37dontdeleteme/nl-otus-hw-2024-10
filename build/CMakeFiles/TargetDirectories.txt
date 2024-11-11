@@ -1,0 +1,12 @@
+/home/love/otus/bad/nl-otus-hw-2024-10/build/CMakeFiles/helloworld_cli.dir
+/home/love/otus/bad/nl-otus-hw-2024-10/build/CMakeFiles/helloworld.dir
+/home/love/otus/bad/nl-otus-hw-2024-10/build/CMakeFiles/test_version.dir
+/home/love/otus/bad/nl-otus-hw-2024-10/build/CMakeFiles/package.dir
+/home/love/otus/bad/nl-otus-hw-2024-10/build/CMakeFiles/package_source.dir
+/home/love/otus/bad/nl-otus-hw-2024-10/build/CMakeFiles/test.dir
+/home/love/otus/bad/nl-otus-hw-2024-10/build/CMakeFiles/edit_cache.dir
+/home/love/otus/bad/nl-otus-hw-2024-10/build/CMakeFiles/rebuild_cache.dir
+/home/love/otus/bad/nl-otus-hw-2024-10/build/CMakeFiles/list_install_components.dir
+/home/love/otus/bad/nl-otus-hw-2024-10/build/CMakeFiles/install.dir
+/home/love/otus/bad/nl-otus-hw-2024-10/build/CMakeFiles/install/local.dir
+/home/love/otus/bad/nl-otus-hw-2024-10/build/CMakeFiles/install/strip.dir
