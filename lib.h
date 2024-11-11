@@ -1,4 +1,5 @@
 #pragma once
 
-const char * version();
+#include <sstream>
+int version();
 

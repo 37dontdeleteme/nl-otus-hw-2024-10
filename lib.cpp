@@ -2,6 +2,10 @@
 
 #include "version.h"
 
-const char * version() {
-	return PROJECT_VERSION;
+int version() {
+  std::stringstream strValue;
+  strValue << PROJECT_VERSION;
+  unsigned int intValue;
+  strValue >> intValue;
+	return intValue;
 }
