@@ -19,6 +19,7 @@ jobs:
       - run: cmake --build . --target test
       - run: cmake --build . --target package
       - name: Create Release
+        permissions: write-all
         id: create_release
         uses: actions/create-release@v1
         env:
