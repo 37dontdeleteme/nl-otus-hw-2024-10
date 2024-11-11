@@ -2,7 +2,7 @@ name: Release
 
 on:
   push:
-    branches: [ main ]
+    branches: [ 1-ci-cd ]
 
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
