@@ -16,11 +16,11 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - name: Install conan
-      run: pip3 install conan
+    # - name: Install conan
+    #   run: pip3 install conan
 
-    - name: Add remote artifactory
-      run: conan remote add otus http://otus-artifactory-cpp-ce.filonovpv.name/artifactory/api/conan/conan
+    # - name: Add remote artifactory
+    #   run: conan remote add otus http://otus-artifactory-cpp-ce.filonovpv.name/artifactory/api/conan/conan
 
   build-windows:
     # The CMake configure and build commands are platform agnostic and should work equally
@@ -32,8 +32,8 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - name: Add remote artifactory
-      run: conan remote add otus http://otus-artifactory-cpp-ce.filonovpv.name/artifactory/api/conan/conan
+    # - name: Add remote artifactory
+    #   run: conan remote add otus http://otus-artifactory-cpp-ce.filonovpv.name/artifactory/api/conan/conan
 
   build-macosx:
     # The CMake configure and build commands are platform agnostic and should work equally
