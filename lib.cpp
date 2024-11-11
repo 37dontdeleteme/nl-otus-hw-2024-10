@@ -3,5 +3,5 @@
 #include "version.h"
 
 const char * version() {
-	return PROJECT_VESRION;
+	return PROJECT_VERSION;
 }
