@@ -39,7 +39,7 @@ ip_str_vector filter(const ip_str_vector &ip_pool, Args... args) {
   ip_str_vector filtered_pool;
   for(const auto &ip : ip_pool) {
     int i = 0;
-    bool is_push = true;
+    bool is_push = false;
     for(const auto & filter_arg : {args...}) {
       if(std::stoi(ip.at(i)) == filter_arg)
         is_push = true;
