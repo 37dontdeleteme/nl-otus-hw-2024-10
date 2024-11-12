@@ -34,13 +34,14 @@ using ip_str_vector = std::vector<std::vector<std::string>>;
 using ip_int_tuple = std::tuple<int, int, int, int>;
 
 template<typename... Args>
-void filter(const ip_str_vector &ip_pool, ip_str_vector &filtered_pool, Args... args) {
+ip_str_vector filter(const ip_str_vector &ip_pool, Args... args) {
   static_assert(sizeof...(args) >= 1 && sizeof...(args) <= 4);
+  ip_str_vector filtered_pool;
   for(const auto &ip : ip_pool) {
     int i = 0;
     bool is_push = true;
-    for(const auto & filter : {args...}) {
-      if(std::stoi(ip.at(i)) == filter)
+    for(const auto & filter_arg : {args...}) {
+      if(std::stoi(ip.at(i)) == filter_arg)
         is_push = true;
       else {
         is_push = false;
@@ -51,6 +52,7 @@ void filter(const ip_str_vector &ip_pool, ip_str_vector &filtered_pool, Args... 
     if(is_push)
       filtered_pool.emplace_back(ip);
   }
+  return filtered_pool;
 }
 
 ip_str_vector filter_any(ip_str_vector &ip_pool, int value) {
@@ -124,8 +126,7 @@ int main(int argc, char const *argv[])
 
         // TODO filter by first byte and output
         // ip = filter(1)
-        ip_str_vector filtered_pool1;
-        filter(ip_pool, filtered_pool1, 1);
+        decltype(ip_pool) filtered_pool1 = filter(ip_pool, 1);
         print_ip_pool(filtered_pool1);
 
         // 1.231.69.33
@@ -136,9 +137,7 @@ int main(int argc, char const *argv[])
 
         // TODO filter by first and second bytes and output
         // ip = filter(46, 70)
-
-        ip_str_vector filtered_pool2;
-        filter(ip_pool, filtered_pool2, 46, 70);
+        decltype(auto) filtered_pool2 = filter(ip_pool, 46, 70);
         print_ip_pool(filtered_pool2);
 
         // 46.70.225.39
@@ -149,7 +148,7 @@ int main(int argc, char const *argv[])
         // TODO filter by any byte and output
         // ip = filter_any(46)
 
-        decltype(auto) filtered_pool3 = filter_any(ip_pool, 46);
+        auto filtered_pool3 = filter_any(ip_pool, 46);
         print_ip_pool(filtered_pool3);
 
         // 186.204.34.46
