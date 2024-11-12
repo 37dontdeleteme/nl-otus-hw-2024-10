@@ -3,6 +3,8 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <tuple>
+#include <algorithm>
 
 // ("",  '.') -> [""]
 // ("11", '.') -> ["11"]
@@ -28,22 +30,59 @@ std::vector<std::string> split(const std::string &str, char d)
 
     return r;
 }
+using ip_str_vector = std::vector<std::vector<std::string>>;
+using ip_int_tuple = std::tuple<int, int, int, int>;
 
-int main(int argc, char const *argv[])
-{
-    try
-    {
-        std::vector<std::vector<std::string> > ip_pool;
+template<typename... Args>
+void filter(const ip_str_vector &ip_pool, ip_str_vector &filtered_pool, Args... args) {
+  static_assert(sizeof...(args) >= 1 && sizeof...(args) <= 4);
+  for(const auto &ip : ip_pool) {
+    int i = 0;
+    bool is_push = true;
+    for(const auto & filter : {args...}) {
+      if(std::stoi(ip.at(i)) == filter)
+        is_push = true;
+      else {
+        is_push = false;
+        break;
+      }
+      i++;
+    }
+    if(is_push)
+      filtered_pool.emplace_back(ip);
+  }
+}
 
-        for(std::string line; std::getline(std::cin, line);)
-        {
-            std::vector<std::string> v = split(line, '\t');
-            ip_pool.push_back(split(v.at(0), '.'));
-        }
+ip_str_vector filter_any(ip_str_vector &ip_pool, int value) {
+  ip_str_vector filtered_ip_pool;
+  for(const auto &ip : ip_pool)
+    for(const auto &octet : ip)
+      if(std::stoi(octet) == value) {
+        filtered_ip_pool.emplace_back(ip);
+        break;
+      }
+  return filtered_ip_pool;
+}
 
-        // TODO reverse lexicographically sort
+void reverse_lexicographically_sort(ip_str_vector& source_ip) {
+  std::vector<ip_int_tuple> int_ip;
+  for(const auto& pool : source_ip)
+    int_ip.push_back(std::make_tuple(std::stoi(pool.at(0)), std::stoi(pool.at(1)), std::stoi(pool.at(2)), std::stoi(pool.at(3))));
+  std::sort(int_ip.begin(), int_ip.end(), 
+  [](const ip_int_tuple& a, const ip_int_tuple& b) -> bool{
+    return a > b;
+  });
+  source_ip.clear();
+  for(const auto& pool: int_ip)
+    source_ip.push_back({std::to_string(std::get<0>(pool)),
+                         std::to_string(std::get<1>(pool)),
+                         std::to_string(std::get<2>(pool)),
+                         std::to_string(std::get<3>(pool))
+                        });
+}
 
-        for(std::vector<std::vector<std::string> >::const_iterator ip = ip_pool.cbegin(); ip != ip_pool.cend(); ++ip)
+void print_ip_pool(ip_str_vector &ip_pool) {
+  for(ip_str_vector::const_iterator ip = ip_pool.cbegin(); ip != ip_pool.cend(); ++ip)
         {
             for(std::vector<std::string>::const_iterator ip_part = ip->cbegin(); ip_part != ip->cend(); ++ip_part)
             {
@@ -56,6 +95,24 @@ int main(int argc, char const *argv[])
             }
             std::cout << std::endl;
         }
+}
+
+int main(int argc, char const *argv[])
+{
+    try
+    {
+        ip_str_vector ip_pool;
+
+        for(std::string line; std::getline(std::cin, line);)
+        {
+            std::vector<std::string> v = split(line, '\t');
+            ip_pool.push_back(split(v.at(0), '.'));
+        }
+
+        reverse_lexicographically_sort(ip_pool);
+        // TODO reverse lexicographically sort
+
+        print_ip_pool(ip_pool);
 
         // 222.173.235.246
         // 222.130.177.64
@@ -67,6 +124,9 @@ int main(int argc, char const *argv[])
 
         // TODO filter by first byte and output
         // ip = filter(1)
+        ip_str_vector filtered_pool1;
+        filter(ip_pool, filtered_pool1, 1);
+        print_ip_pool(filtered_pool1);
 
         // 1.231.69.33
         // 1.87.203.225
@@ -77,6 +137,10 @@ int main(int argc, char const *argv[])
         // TODO filter by first and second bytes and output
         // ip = filter(46, 70)
 
+        ip_str_vector filtered_pool2;
+        filter(ip_pool, filtered_pool2, 46, 70);
+        print_ip_pool(filtered_pool2);
+
         // 46.70.225.39
         // 46.70.147.26
         // 46.70.113.73
@@ -84,6 +148,9 @@ int main(int argc, char const *argv[])
 
         // TODO filter by any byte and output
         // ip = filter_any(46)
+
+        decltype(auto) filtered_pool3 = filter_any(ip_pool, 46);
+        print_ip_pool(filtered_pool3);
 
         // 186.204.34.46
         // 186.46.222.194
