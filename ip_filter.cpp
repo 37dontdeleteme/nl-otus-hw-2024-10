@@ -99,7 +99,7 @@ void print_ip_pool(ip_str_vector &ip_pool) {
         }
 }
 
-int main(int argc, char const *argv[])
+int main()
 {
     try
     {
