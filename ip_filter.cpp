@@ -55,7 +55,7 @@ ip_str_vector filter(const ip_str_vector &ip_pool, Args... args) {
   return filtered_pool;
 }
 
-ip_str_vector filter_any(ip_str_vector &ip_pool, int value) {
+ip_str_vector filter_any(const ip_str_vector &ip_pool, int value) {
   ip_str_vector filtered_ip_pool;
   for(const auto &ip : ip_pool)
     for(const auto &octet : ip)
@@ -83,7 +83,7 @@ void reverse_lexicographically_sort(ip_str_vector& source_ip) {
                         });
 }
 
-void print_ip_pool(ip_str_vector &ip_pool) {
+void print_ip_pool(const ip_str_vector &ip_pool) {
   for(ip_str_vector::const_iterator ip = ip_pool.cbegin(); ip != ip_pool.cend(); ++ip)
         {
             for(std::vector<std::string>::const_iterator ip_part = ip->cbegin(); ip_part != ip->cend(); ++ip_part)
