@@ -5,6 +5,7 @@
 #include <vector>
 #include <tuple>
 #include <algorithm>
+#include <array>
 
 // ("",  '.') -> [""]
 // ("11", '.') -> ["11"]
@@ -30,18 +31,18 @@ std::vector<std::string> split(const std::string &str, char d)
 
     return r;
 }
-using ip_str_vector = std::vector<std::vector<std::string>>;
+using ip_int_vector = std::vector<std::array<int, 4>>;
 using ip_int_tuple = std::tuple<int, int, int, int>;
 
 template<typename... Args>
-ip_str_vector filter(const ip_str_vector &ip_pool, Args... args) {
+ip_int_vector filter(const ip_int_vector &ip_pool, Args... args) {
   static_assert(sizeof...(args) >= 1 && sizeof...(args) <= 4);
-  ip_str_vector filtered_pool;
+  ip_int_vector filtered_pool;
   for(const auto &ip : ip_pool) {
     int i = 0;
     bool is_push = false;
     for(const auto & filter_arg : {args...}) {
-      if(std::stoi(ip.at(i)) == filter_arg)
+      if(ip.at(i) == filter_arg)
         is_push = true;
       else {
         is_push = false;
@@ -55,38 +56,38 @@ ip_str_vector filter(const ip_str_vector &ip_pool, Args... args) {
   return filtered_pool;
 }
 
-ip_str_vector filter_any(const ip_str_vector &ip_pool, int value) {
-  ip_str_vector filtered_ip_pool;
+ip_int_vector filter_any(const ip_int_vector &ip_pool, int value) {
+  ip_int_vector filtered_ip_pool;
   for(const auto &ip : ip_pool)
     for(const auto &octet : ip)
-      if(std::stoi(octet) == value) {
+      if(octet == value) {
         filtered_ip_pool.emplace_back(ip);
         break;
       }
   return filtered_ip_pool;
 }
 
-void reverse_lexicographically_sort(ip_str_vector& source_ip) {
+void reverse_lexicographically_sort(ip_int_vector& source_ip) {
   std::vector<ip_int_tuple> int_ip;
   for(const auto& pool : source_ip)
-    int_ip.push_back(std::make_tuple(std::stoi(pool.at(0)), std::stoi(pool.at(1)), std::stoi(pool.at(2)), std::stoi(pool.at(3))));
+    int_ip.push_back(std::make_tuple(pool.at(0), pool.at(1), pool.at(2), pool.at(3)));
   std::sort(int_ip.begin(), int_ip.end(), 
   [](const ip_int_tuple& a, const ip_int_tuple& b) -> bool{
     return a > b;
   });
   source_ip.clear();
   for(const auto& pool: int_ip)
-    source_ip.push_back({std::to_string(std::get<0>(pool)),
-                         std::to_string(std::get<1>(pool)),
-                         std::to_string(std::get<2>(pool)),
-                         std::to_string(std::get<3>(pool))
+    source_ip.push_back({std::get<0>(pool),
+                         std::get<1>(pool),
+                         std::get<2>(pool),
+                         std::get<3>(pool)
                         });
 }
 
-void print_ip_pool(const ip_str_vector &ip_pool) {
-  for(ip_str_vector::const_iterator ip = ip_pool.cbegin(); ip != ip_pool.cend(); ++ip)
+void print_ip_pool(const ip_int_vector &ip_pool) {
+  for(ip_int_vector::const_iterator ip = ip_pool.cbegin(); ip != ip_pool.cend(); ++ip)
         {
-            for(std::vector<std::string>::const_iterator ip_part = ip->cbegin(); ip_part != ip->cend(); ++ip_part)
+            for(std::array<int, 4>::const_iterator ip_part = ip->cbegin(); ip_part != ip->cend(); ++ip_part)
             {
                 if (ip_part != ip->cbegin())
                 {
@@ -103,12 +104,18 @@ int main()
 {
     try
     {
-        ip_str_vector ip_pool;
+        ip_int_vector ip_pool;
 
         for(std::string line; std::getline(std::cin, line);)
         {
             std::vector<std::string> v = split(line, '\t');
-            ip_pool.push_back(split(v.at(0), '.'));
+            int i = 0;
+            std::array<int, 4> int_ip;
+            for(const auto &octet : split(v.at(0), '.')) {
+              int_ip.at(i) = std::stoi(octet);
+              i++;
+            }
+            ip_pool.push_back(int_ip);
         }
 
         reverse_lexicographically_sort(ip_pool);
